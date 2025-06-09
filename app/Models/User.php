@@ -31,4 +31,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'code' => 'integer',
     ];
+
+    public function plans()
+    {
+        return $this->hasMany(Plan::class);
+    }
 }

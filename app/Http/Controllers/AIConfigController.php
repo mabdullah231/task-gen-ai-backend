@@ -94,7 +94,7 @@ class AIConfigController extends Controller
             // Extract plant name and assessment responses from input
             $userInput = $request->text;
 
-$expertPrompt = <<<EOT
+            $expertPrompt = <<<EOT
 
 Here's the information:
 
@@ -139,9 +139,9 @@ EOT;
             // }
             if ($response->successful()) {
                 $aiDiagnosis = $response->json()['candidates'][0]['content']['parts'][0]['text'];
-                
 
-            
+
+
                 return response()->json([
                     'message' => 'Diagnosis saved successfully.',
                     'data' => $aiDiagnosis,

@@ -3,6 +3,8 @@
 use App\Http\Controllers\AIConfigController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StatsController;
+use App\Http\Controllers\TaskBotController;
+use App\Http\Controllers\PlansController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,22 +26,28 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
     Route::get('/stats', [StatsController::class, 'adminStats']);
-    Route::prefix('openai')->group(function () {
-        Route::post('/manage-config', [AIConfigController::class, 'manageOpenAIConfig']);
-        Route::get('/view-config', [AIConfigController::class, 'viewOpenAIConfig']);
+    Route::prefix('ai')->group(function () {
+        Route::post('/manage-config', [AIConfigController::class, 'manageAIConfig']);
+        Route::get('/view-config', [AIConfigController::class, 'viewAIConfig']);
     });
 
     Route::prefix('userdata')->group(function () {
-        Route::get('/get/{id}', [UserController::class, 'getUser']); // Get single user with company
-        Route::get('/get-all', [UserController::class, 'getAllUsers']); // Get all users with companies
-        Route::put('/toggle-status/{id}', [UserController::class, 'toggleUserStatus']); // Activate/Deactivate user
-        Route::put('/make-subadmin/{id}', [UserController::class, 'makeSubadmin']); // Activate/Deactivate user
+        Route::get('/get/{id}', [UserController::class, 'getUser']); 
+        Route::get('/get-all', [UserController::class, 'getAllUsers']); 
+        Route::put('/toggle-status/{id}', [UserController::class, 'toggleUserStatus']); 
+        Route::put('/make-subadmin/{id}', [UserController::class, 'makeSubadmin']); 
     });
 });
 
 Route::middleware(['auth:sanctum', 'user'])->prefix('user')->group(function () {
     Route::get('/stats', [StatsController::class, 'userStats']);
-    Route::prefix('ai')->group(function () {
-        Route::post('/generate-response', [AIConfigController::class, 'generateContent']);
+    Route::get('/details', [UserController::class, 'getUserDetails']);
+    Route::put('/update', [UserController::class, 'updateUserDetails']);
+    Route::prefix('taskbot')->group(function () {
+        Route::post('/generate-suggestions', [TaskBotController::class, 'suggestionGeneration']);
+    });
+    Route::prefix('plans')->group(function () {
+        Route::post('/all', [PlansController::class, 'getAllPlans']);
+        Route::post('/single/id', [PlansController::class, 'getSinglePlan']);
     });
 });
